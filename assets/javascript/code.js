@@ -47,7 +47,17 @@ var randomURL = "http://api.giphy.com/v1/gifs/random?" + apiKeyTag + formatTag;
 // this click listener handles the giphy buttons at the top of the page
 $(document).on("click", ".giphyButtons", clickMe);
 $(document).on("click", "#searchButton", getSearchTerm);
-//$(document).on("click", ".radio", selectRadio);
+searchRadio.on("click", function() {
+	searchRadio.prop("checked", true);
+	randomRadio.prop('checked', false);
+
+});
+
+randomRadio.on("click", function() {
+	randomRadio.prop("checked", true);
+	searchRadio.prop("checked", false);
+
+});
 
 
 // ---------- FUNCTIONS ----------
@@ -70,11 +80,14 @@ function getSearchTerm(e) {
     var searchTerm = searchField.val().trim();
     if (searchTerm.length > 0) createButton(searchTerm);
 
-    if (searchRadio.prop("checked", true)) {
+    if (searchRadio.prop("checked")) {
     	console.log("search");
     	search(searchTerm);
     }
-    else random(searchTerm);
+    else {
+    	console.log("random");
+    	randomGiphy(searchTerm);
+    }
 
     // clear #searchField
     searchField.val("");
@@ -84,8 +97,9 @@ function getSearchTerm(e) {
 //this function sets the checked property of the radio buttons
 function selectRadio() {
 	var selection = $(this).val() + "Radio";
+	console.log(selection);
 
-	$(".radio").prop("checked", false);
+	$(".circles").prop("checked", false);
 	selection.prop("checked", true);
 
 }
