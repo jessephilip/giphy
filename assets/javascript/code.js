@@ -8,38 +8,47 @@ var items = ["fall", "slide", "trip", "slip", "wreck", "belly flop", "crash", "j
 // ---------- LOCATIONS ----------
 var buttonSection = $("#buttonSection");
 var imageSection = $("#imageSection");
+var searchField = $("#searchField");
+var searchRadio = $("#searchRadio");
+var randomRadio = $("#randomRadio");
 
 // ---------- URL TAGS FOR AJAX ----------
-var searchURL = "http://api.giphy.com/v1/gifs/search?&api_key=dc6zaTOxFJmzC&fmt=json";
-
-// returns top 25 giphys
-var trendingURL = "http://api.giphy.com/v1/gifs/trending?&api_key=dc6zaTOxFJmzC&fmt=json";
-
-//generates a random giphy. can add a tag to the request to get a random giphy in that area
-var randomURL = "http://api.giphy.com/v1/gifs/random?&api_key=dc6zaTOxFJmzC&fmt=json";
 
 // search query term or phrase
-var search = "&q=";
+var searchTag = "&q=";
 
 // number of results to return, maximum 100. Default 25.
-var limit = "&limit=";
+var limitTag = "&limit=";
 
 // rating - (optional) limit results to those rated (y,g, pg, pg-13 or r). for all URLs
-var rating = "&rating=";
+var ratingTag = "&rating=";
 
 // the format to return the object. for all URLS.
-var format = "&fmt=json";
+var formatTag = "&fmt=json";
 
 //the tag term. for random.
-var tag = "&tag=";
+var tagTag = "&tag=";
 
 // the public api key. for all URLS
-var apiKey = "&api_key=dc6zaTOxFJmzC";
+var apiKeyTag = "&api_key=dc6zaTOxFJmzC";
+
+// combined URL phrases for searches
+
+var searchURL = "http://api.giphy.com/v1/gifs/search?" + apiKeyTag + formatTag;
+
+// returns top 25 giphys
+var trendingURL = "http://api.giphy.com/v1/gifs/trending?" + apiKeyTag + formatTag;
+
+//generates a random giphy. can add a tag to the request to get a random giphy in that area
+var randomURL = "http://api.giphy.com/v1/gifs/random?" + apiKeyTag + formatTag;
 
 // ---------- CLICKLISTENERS ----------
 
 // this click listener handles the giphy buttons at the top of the page
 $(document).on("click", ".giphyButtons", clickMe);
+$(document).on("click", "#searchButton", getSearchTerm);
+//$(document).on("click", ".radio", selectRadio);
+
 
 // ---------- FUNCTIONS ----------
 
@@ -49,9 +58,58 @@ function clickMe() {
     // the value of the clicked button
     var searchTerm = $(this).val();
 
+    // perform ajax search
+    search(searchTerm);
+
+}
+
+// this function gets the value of the user's search term
+function getSearchTerm(e) {
+    e.preventDefault();
+
+    var searchTerm = searchField.val().trim();
+    if (searchTerm.length > 0) createButton(searchTerm);
+
+    if (searchRadio.prop("checked", true)) {
+    	console.log("search");
+    	search(searchTerm);
+    }
+    else random(searchTerm);
+
+    // clear #searchField
+    searchField.val("");
+
+}
+
+//this function sets the checked property of the radio buttons
+function selectRadio() {
+	var selection = $(this).val() + "Radio";
+
+	$(".radio").prop("checked", false);
+	selection.prop("checked", true);
+
+}
+
+// this function creates a singular button from the string passed to it
+function createButton(name) {
+
+    items.push(name);
+    buttonSection.empty();
+
+    for (var i = 0; i < items.length; i++) {
+        var button = $("<button>");
+        button.addClass("btn btn-primary giphyButtons");
+        button.text(items[i]);
+        button.val(items[i]);
+        buttonSection.append(button);
+    }
+
+}
+
+// this function performs an ajax call to giphy and returns search results
+function search(search) {
     $.ajax({
-            url: searchURL + search + searchTerm + limit + 9,
-            //url: searchURL + search + searchTerm + (limit + 5),
+            url: searchURL + searchTag + search + limitTag + 9,
             type: "GET",
             dataType: "json"
         })
@@ -68,11 +126,49 @@ function clickMe() {
                 }
 
                 var div = $("<div>");
-                div.addClass('col-md-3');
+                div.addClass('col-xs-3');
                 row.append(div);
 
                 var h4 = $("<h4>");
-                h4.text(object.data[i].rating);
+                h4.text("Rating: " + object.data[i].rating.toUpperCase());
+                div.append(h4);
+
+                var image = $("<img>");
+                image.attr("src", object.data[i].images.fixed_height_downsampled.url);
+                //image.attr("src", object.data[i].images.fixed_height_small.url);
+                image.attr("alt", "searchTerm");
+                image.addClass('img-responsive');
+                div.append(image);
+
+            }
+
+        });
+}
+
+function randomGiphy(random) {
+	$.ajax({
+            url: randomURL + tagTag + random,
+            type: "GET",
+            dataType: "json"
+        })
+        .done(function(object) {
+            console.log(object);
+
+            imageSection.empty();
+
+            for (var i = 0; i < object.data.length; i++) {
+                if (i % 3 == 0) {
+                    var row = $("<div class='row'>");
+                    row.attr("id", "row" + i);
+                    imageSection.append(row);
+                }
+
+                var div = $("<div>");
+                div.addClass('col-xs-3');
+                row.append(div);
+
+                var h4 = $("<h4>");
+                h4.text("Rating: " + object.data[i].rating.toUpperCase());
                 div.append(h4);
 
                 var image = $("<img>");
@@ -88,13 +184,17 @@ function clickMe() {
 
 }
 
-//---------- STARTUP CODE ----------
-
+// this function sets the page up and is to be run at startup
 // create buttons across the top of the page
-for (var i = 0; i < items.length; i++) {
-    var button = $("<button>");
-    button.addClass("btn btn-primary giphyButtons");
-    button.text(items[i]);
-    button.val(items[i]);
-    buttonSection.append(button);
+function start() {
+    for (var i = 0; i < items.length; i++) {
+        var button = $("<button>");
+        button.addClass("btn btn-primary giphyButtons");
+        button.text(items[i]);
+        button.val(items[i]);
+        buttonSection.append(button);
+    }
 }
+
+//---------- STARTUP CODE ----------
+start();

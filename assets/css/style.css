@@ -1,3 +1,7 @@
+html {
+  overflow-y: scroll;
+}
+
 img {
 	margin: 2%;
 }
@@ -19,10 +23,14 @@ header {
 }
 
 aside {
-	width: 200px;
-	height: 150px;
+	padding: 10px;
+	top: 135px;
+	right: 60px;
 	position: fixed;
-	margin-left: 75%;
 	background-color: lightblue;
 	z-index: 1;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#searchField {
 }
