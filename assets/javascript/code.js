@@ -3,12 +3,11 @@
 // ---------- GLOBAL VARIABLES ----------
 
 // array of interested subjects
-var items = ["fall", "slide", "trip", "slip", "wreck", "belly flop", "crash"];
+var items = ["fall", "slide", "trip", "slip", "wreck", "belly flop", "crash", "jump", "catch", "swing", "throw", "toss", "punch", "kick", "stretch", "parkour", "laugh", "dive", "skip", "dance", "push", "balance", "flip", "skate", "climb", "hang", "break", "fail"];
 
 // ---------- LOCATIONS ----------
 var buttonSection = $("#buttonSection");
 var imageSection = $("#imageSection");
-
 
 // ---------- URL TAGS FOR AJAX ----------
 var searchURL = "http://api.giphy.com/v1/gifs/search?&api_key=dc6zaTOxFJmzC&fmt=json";
@@ -51,18 +50,38 @@ function clickMe() {
     var searchTerm = $(this).val();
 
     $.ajax({
-            url: searchURL + search + searchTerm + (limit + 5),
+            url: searchURL + search + searchTerm + limit + 9,
+            //url: searchURL + search + searchTerm + (limit + 5),
             type: "GET",
             dataType: "json"
         })
         .done(function(object) {
             console.log(object);
 
+            imageSection.empty();
+
             for (var i = 0; i < object.data.length; i++) {
+                if (i % 3 == 0) {
+                    var row = $("<div class='row'>");
+                    row.attr("id", "row" + i);
+                    imageSection.append(row);
+                }
+
+                var div = $("<div>");
+                div.addClass('col-md-3');
+                row.append(div);
+
+                var h4 = $("<h4>");
+                h4.text(object.data[i].rating);
+                div.append(h4);
+
                 var image = $("<img>");
-                image.attr("src", object.data[i].images.fixed_height_small.url);
+                image.attr("src", object.data[i].images.fixed_height_downsampled.url);
+                //image.attr("src", object.data[i].images.fixed_height_small.url);
                 image.attr("alt", "searchTerm");
-                imageSection.append(image);
+                image.addClass('img-responsive');
+                div.append(image);
+
             }
 
         });
@@ -74,10 +93,8 @@ function clickMe() {
 // create buttons across the top of the page
 for (var i = 0; i < items.length; i++) {
     var button = $("<button>");
-    button.addClass("giphyButtons");
+    button.addClass("btn btn-primary giphyButtons");
     button.text(items[i]);
     button.val(items[i]);
     buttonSection.append(button);
 }
-
-

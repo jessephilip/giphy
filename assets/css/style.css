@@ -1,0 +1,28 @@
+img {
+	margin: 2%;
+}
+
+button {
+	margin: 5px;
+}
+
+header {
+	padding: 5px;
+	position: fixed;
+	z-index: 1;
+	background-color: white;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#imageSection {
+	margin-top: 100px;
+}
+
+aside {
+	width: 200px;
+	height: 150px;
+	position: fixed;
+	margin-left: 75%;
+	background-color: lightblue;
+	z-index: 1;
+}
