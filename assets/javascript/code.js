@@ -37,13 +37,13 @@ var apiKeyTag = "&api_key=dc6zaTOxFJmzC";
 
 // combined URL phrases for searches
 
-var searchURL = "http://api.giphy.com/v1/gifs/search?" + apiKeyTag + formatTag;
+var searchURL = "https://api.giphy.com/v1/gifs/search?" + apiKeyTag + formatTag;
 
 // returns top 25 giphys
-var trendingURL = "http://api.giphy.com/v1/gifs/trending?" + apiKeyTag + formatTag;
+var trendingURL = "https://api.giphy.com/v1/gifs/trending?" + apiKeyTag + formatTag;
 
 //generates a random giphy. can add a tag to the request to get a random giphy in that area
-var randomURL = "http://api.giphy.com/v1/gifs/random?" + apiKeyTag + formatTag;
+var randomURL = "https://api.giphy.com/v1/gifs/random?" + apiKeyTag + formatTag;
 
 // ---------- CLICKLISTENERS ----------
 
