@@ -46,16 +46,22 @@ var randomURL = "http://api.giphy.com/v1/gifs/random?" + apiKeyTag + formatTag;
 
 // this click listener handles the giphy buttons at the top of the page
 $(document).on("click", ".giphyButtons", clickMe);
+
+// this clicklistener toggles the on/off for gifs
+$(document).on("click", ".giphyImage", toggleGiphy);
+
+// this clicklistener handles the submit button
 $(document).on("click", "#searchButton", getSearchTerm);
+
 searchRadio.on("click", function() {
-	searchRadio.prop("checked", true);
-	randomRadio.prop('checked', false);
+    searchRadio.prop("checked", true);
+    randomRadio.prop('checked', false);
 
 });
 
 randomRadio.on("click", function() {
-	randomRadio.prop("checked", true);
-	searchRadio.prop("checked", false);
+    randomRadio.prop("checked", true);
+    searchRadio.prop("checked", false);
 
 });
 
@@ -78,29 +84,18 @@ function getSearchTerm(e) {
     e.preventDefault();
 
     var searchTerm = searchField.val().trim();
-    if (searchTerm.length > 0) createButton(searchTerm);
+
+    // check to make sure #searchField is not empty. Do not create a button for random searches
+    if (searchTerm.length > 0 && !($("#randomRadio").prop("checked"))) createButton(searchTerm);
 
     if (searchRadio.prop("checked")) {
-    	console.log("search");
-    	search(searchTerm);
-    }
-    else {
-    	console.log("random");
-    	randomGiphy(searchTerm);
+        search(searchTerm);
+    } else {
+        randomGiphy(searchTerm);
     }
 
     // clear #searchField
     searchField.val("");
-
-}
-
-//this function sets the checked property of the radio buttons
-function selectRadio() {
-	var selection = $(this).val() + "Radio";
-	console.log(selection);
-
-	$(".circles").prop("checked", false);
-	selection.prop("checked", true);
 
 }
 
@@ -112,7 +107,7 @@ function createButton(name) {
 
     for (var i = 0; i < items.length; i++) {
         var button = $("<button>");
-        button.addClass("btn btn-primary giphyButtons");
+        button.addClass("btn btn-primary giphyButtons hvr-glow");
         button.text(items[i]);
         button.val(items[i]);
         buttonSection.append(button);
@@ -139,6 +134,8 @@ function search(search) {
                     imageSection.append(row);
                 }
 
+
+
                 var div = $("<div>");
                 div.addClass('col-xs-3');
                 row.append(div);
@@ -148,10 +145,18 @@ function search(search) {
                 div.append(h4);
 
                 var image = $("<img>");
-                image.attr("src", object.data[i].images.fixed_height_downsampled.url);
-                //image.attr("src", object.data[i].images.fixed_height_small.url);
+                image.attr("src", object.data[i].images.downsized.url);
                 image.attr("alt", "searchTerm");
-                image.addClass('img-responsive');
+
+                // make the url to the still image a data attribute
+                image.data("still", object.data[i].images.downsized_still.url);
+
+                // make the url to the gif image a data attribute
+                image.data("giphy", object.data[i].images.downsized.url);
+
+                // make the toggle status to the still image a data attribute
+                image.data("toggle", true);
+                image.addClass('img-responsive giphyImage');
                 div.append(image);
 
             }
@@ -160,7 +165,8 @@ function search(search) {
 }
 
 function randomGiphy(random) {
-	$.ajax({
+    console.log("here");
+    $.ajax({
             url: randomURL + tagTag + random,
             type: "GET",
             dataType: "json"
@@ -170,32 +176,44 @@ function randomGiphy(random) {
 
             imageSection.empty();
 
-            for (var i = 0; i < object.data.length; i++) {
-                if (i % 3 == 0) {
-                    var row = $("<div class='row'>");
-                    row.attr("id", "row" + i);
-                    imageSection.append(row);
-                }
+            var row = $("<div class='row'>");
+            imageSection.append(row);
 
-                var div = $("<div>");
-                div.addClass('col-xs-3');
-                row.append(div);
 
-                var h4 = $("<h4>");
-                h4.text("Rating: " + object.data[i].rating.toUpperCase());
-                div.append(h4);
+            var div = $("<div>");
+            div.addClass('col-xs-12');
+            row.append(div);
 
-                var image = $("<img>");
-                image.attr("src", object.data[i].images.fixed_height_downsampled.url);
-                //image.attr("src", object.data[i].images.fixed_height_small.url);
-                image.attr("alt", "searchTerm");
-                image.addClass('img-responsive');
-                div.append(image);
-
-            }
+            var image = $("<img>");
+            image.attr("src", object.data.fixed_height_downsampled_url);
+            image.attr("alt", "searchTerm");
+            image.addClass('img-responsive');
+            div.append(image);
 
         });
 
+}
+
+// this function toggles the giphy to start and stop
+function toggleGiphy() {
+
+    // get still image
+    var still = $(this).data("still");
+
+    // get gif image
+    var giphy = $(this).data("giphy");
+
+    // get toggle status
+    var toggle = $(this).data("toggle");
+
+    // if image moving, replace the image with a still. otherwise, replace the still with the gif
+    if (toggle) {
+        $(this).attr("src", still);
+        $(this).data("toggle", false);
+    } else {
+        $(this).attr("src", giphy);
+        $(this).data("toggle", true);
+    }
 }
 
 // this function sets the page up and is to be run at startup
@@ -203,7 +221,7 @@ function randomGiphy(random) {
 function start() {
     for (var i = 0; i < items.length; i++) {
         var button = $("<button>");
-        button.addClass("btn btn-primary giphyButtons");
+        button.addClass("btn btn-primary giphyButtons hvr-glow");
         button.text(items[i]);
         button.val(items[i]);
         buttonSection.append(button);
