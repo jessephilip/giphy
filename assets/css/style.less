@@ -1,0 +1,72 @@
+// variables for color
+
+// indigo theme, based on google material colors
+@primaryColor: #3F51B5;
+@darkColor: #1A237E;
+@lightColor: #7986CB;
+@accentColor: #FFFF00;
+
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+	  font-family: 'Ubuntu', sans-serif;
+	  color: white;
+	  background-color: @lightColor;
+}
+
+img {
+	margin: 2%;
+}
+
+button {
+	margin: 5px;
+}
+
+header {
+	padding: 5px 10px 10px 10px;
+	position: fixed;
+	z-index: 1;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	background-color: @darkColor;
+}
+
+#imageSection {
+	margin-top: 100px;
+}
+
+#randomRadio {
+	margin-left: 10px;
+}
+
+#iconBox {
+	text-align: center;
+	line-height: 75px;
+	font-size: 2.0em;
+}
+
+aside {
+	padding: 10px;
+	top: 135px;
+	right: 60px;
+	position: fixed;
+	background-color: @darkColor;
+	z-index: 1;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.btn-primary {
+	background-color: @primaryColor;
+}
+
+.btn-primary:hover {
+	background-color: @accentColor;
+	color: black;
+
+}
+
+#searchField {
+	color: black;
+}

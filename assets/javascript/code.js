@@ -12,6 +12,9 @@ var searchField = $("#searchField");
 var searchRadio = $("#searchRadio");
 var randomRadio = $("#randomRadio");
 
+// ---------- SELECTORS ----------
+var primaryButtons = $(".giphyButtons");
+
 // ---------- URL TAGS FOR AJAX ----------
 
 // search query term or phrase
@@ -64,6 +67,24 @@ randomRadio.on("click", function() {
     searchRadio.prop("checked", false);
 
 });
+
+/*
+// ---------- HOVERLISTENER ----------
+
+$(document).on("mouseenter", ".giphyButtons", enter); 
+
+function enter() {
+    console.log("enter");
+    $(".glyphicon").css("font-size", "2.0em");
+}
+
+$(document).on("mouseleave", ".giphyButtons", leave); 
+
+function leave() {
+    console.log("leave");
+    $(".glyphicon").css("font-size", "1.5em");
+}
+*/
 
 
 // ---------- FUNCTIONS ----------
