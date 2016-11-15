@@ -3,37 +3,39 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Giphy Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Giphy Quick Search</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/gif.ico">
     <!-- google fonts -->
     <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-	<!-- bootstrap -->
+    <!-- bootstrap -->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <!-- custom css -->
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
 
 <body>
-	<header class="container-fluid">
-		<div class="row">
-			<div id="iconBox" class="col-xs-1">
-				<span class="glyphicon glyphicon-search"></span>
-			</div>
-    		<section id="buttonSection" class="col-xs-11"></section>
-    	</div>
-
+    <header class="container-fluid">
+        <div class="row">
+            <div id="iconBox" class="col-xs-1">
+                <span class="glyphicon glyphicon-search"></span>
+            </div>
+            <section id="buttonSection" class="col-xs-11"></section>
+        </div>
     </header>
     <section class="container">
-    	<section id="imageSection"></section>
+        <section id="imageSection"></section>
     </section>
-	<aside id="searchBox">
-		<form>
-			<input id="searchField" type="search"><br>
-			<input id="searchRadio" type="radio" name="queryType" value="search" checked>search
-			<input id="randomRadio" type="radio" name="queryType" value="random">random<br>
-			<input id="searchButton" class="btn btn-primary" type="submit" name="search">
-		</form>
- 	</aside>
- 
+    <aside id="searchBox">
+        <form>
+            <input id="searchField" type="search">
+            <br>
+            <input id="searchRadio" type="radio" name="queryType" value="search" checked>search
+            <input id="randomRadio" type="radio" name="queryType" value="random">random
+            <br>
+            <input id="searchButton" class="btn btn-primary" type="submit" name="search">
+        </form>
+    </aside>
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <!-- custom javascript -->

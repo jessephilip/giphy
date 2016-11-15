@@ -45,6 +45,9 @@ var trendingURL = "https://api.giphy.com/v1/gifs/trending?" + apiKeyTag + format
 //generates a random giphy. can add a tag to the request to get a random giphy in that area
 var randomURL = "https://api.giphy.com/v1/gifs/random?" + apiKeyTag + formatTag;
 
+//giphy search by giphy id
+var idURL = "http://api.giphy.com/v1/gifs/";
+
 // ---------- CLICKLISTENERS ----------
 
 // this click listener handles the giphy buttons at the top of the page
@@ -56,36 +59,19 @@ $(document).on("click", ".giphyImage", toggleGiphy);
 // this clicklistener handles the submit button
 $(document).on("click", "#searchButton", getSearchTerm);
 
+// clicklistener for the search radio button. toggles checked property
 searchRadio.on("click", function() {
     searchRadio.prop("checked", true);
     randomRadio.prop('checked', false);
 
 });
 
+// clicklistener for the random radio button. toggles checked property
 randomRadio.on("click", function() {
     randomRadio.prop("checked", true);
     searchRadio.prop("checked", false);
 
 });
-
-/*
-// ---------- HOVERLISTENER ----------
-
-$(document).on("mouseenter", ".giphyButtons", enter); 
-
-function enter() {
-    console.log("enter");
-    $(".glyphicon").css("font-size", "2.0em");
-}
-
-$(document).on("mouseleave", ".giphyButtons", leave); 
-
-function leave() {
-    console.log("leave");
-    $(".glyphicon").css("font-size", "1.5em");
-}
-*/
-
 
 // ---------- FUNCTIONS ----------
 
@@ -109,18 +95,23 @@ function getSearchTerm(e) {
     // check to make sure #searchField is not empty. Do not create a button for random searches
     if (searchTerm.length > 0 && !($("#randomRadio").prop("checked"))) createButton(searchTerm);
 
+    // handles which radio button is checked. run search if checked, otherwise random
     if (searchRadio.prop("checked")) {
+
+        // run search query
         search(searchTerm);
+
+        // clear #searchField
+        searchField.val("");
     } else {
+
+        // run random query and do not clear the searchField
         randomGiphy(searchTerm);
     }
 
-    // clear #searchField
-    searchField.val("");
-
 }
 
-// this function creates a singular button from the string passed to it
+// this function is used to add a button at the top. string passed to it is the name of the button.
 function createButton(name) {
 
     items.push(name);
@@ -155,16 +146,17 @@ function search(search) {
                     imageSection.append(row);
                 }
 
-
-
+                // create div for bootstrap tidyness
                 var div = $("<div>");
                 div.addClass('col-xs-3');
                 row.append(div);
 
+                // holds the rating text for the giphy
                 var h4 = $("<h4>");
                 h4.text("Rating: " + object.data[i].rating.toUpperCase());
                 div.append(h4);
 
+                // img for the gif or still image
                 var image = $("<img>");
                 image.attr("src", object.data[i].images.downsized.url);
                 image.attr("alt", "searchTerm");
@@ -185,31 +177,62 @@ function search(search) {
         });
 }
 
+// this function uses the random url to get one random picture. it
+// this function performs two ajax requests because the request for a random gif does not return a rating for that gif
 function randomGiphy(random) {
-    console.log("here");
     $.ajax({
             url: randomURL + tagTag + random,
             type: "GET",
             dataType: "json"
         })
-        .done(function(object) {
-            console.log(object);
+        .done(function(randomObject) {
 
-            imageSection.empty();
+            // variable to hold the specific id of the randomly generated gif
+            var id = randomObject.data.id;
 
-            var row = $("<div class='row'>");
-            imageSection.append(row);
+            // begin second ajax call with specific id
+            $.ajax({
+                    url: idURL + id + "?" + apiKeyTag,
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(idObject) {
+                    console.log(idObject);
 
+                    // empty any previous pictures on the page
+                    imageSection.empty();
 
-            var div = $("<div>");
-            div.addClass('col-xs-12');
-            row.append(div);
+                    // div for bootstrap tidyness
+                    var row = $("<div class='row'>");
+                    imageSection.append(row);
 
-            var image = $("<img>");
-            image.attr("src", object.data.fixed_height_downsampled_url);
-            image.attr("alt", "searchTerm");
-            image.addClass('img-responsive');
-            div.append(image);
+                    // div for bootstrap tidyness. if the gif is very large, it will go under the search box. this is intentional.
+                    var div = $("<div>");
+                    div.addClass('col-xs-12');
+                    row.append(div);
+
+                    // holds the rating of the gif
+                    var h4 = $("<h4>");
+                    h4.text("Rating: " + idObject.data.rating.toUpperCase());
+                    div.append(h4);
+
+                    // holds the gif or still
+                    var image = $("<img>");
+                    image.attr("src", idObject.data.images.original.url);
+                    image.attr("alt", "searchTerm");
+                    image.addClass('img-responsive giphyImage');
+
+                    // make the url to the still image a data attribute
+                    image.data("still", idObject.data.images.original_still.url);
+
+                    // make the url to the gif image a data attribute
+                    image.data("giphy", idObject.data.images.original.url);
+
+                    // make the toggle status to the still image a data attribute
+                    image.data("toggle", true);
+                    div.append(image);
+
+                });
 
         });
 

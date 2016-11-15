@@ -5,9 +5,11 @@
 @darkColor: #1A237E;
 @lightColor: #7986CB;
 @accentColor: #FFFF00;
+@shadowColor: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 
 html {
+  // this prevents the repositioning of the screen if the scroll bar appears
   overflow-y: scroll;
 }
 
@@ -25,11 +27,12 @@ button {
 	margin: 5px;
 }
 
+// sticky header
 header {
 	padding: 5px 10px 10px 10px;
 	position: fixed;
 	z-index: 1;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	box-shadow: @shadowColor;
 	background-color: @darkColor;
 }
 
@@ -54,7 +57,7 @@ aside {
 	position: fixed;
 	background-color: @darkColor;
 	z-index: 1;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	box-shadow: @shadowColor;
 }
 
 .btn-primary {
