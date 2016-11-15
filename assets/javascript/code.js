@@ -46,7 +46,7 @@ var trendingURL = "https://api.giphy.com/v1/gifs/trending?" + apiKeyTag + format
 var randomURL = "https://api.giphy.com/v1/gifs/random?" + apiKeyTag + formatTag;
 
 //giphy search by giphy id
-var idURL = "http://api.giphy.com/v1/gifs/";
+var idURL = "https://api.giphy.com/v1/gifs/";
 
 // ---------- CLICKLISTENERS ----------
 
